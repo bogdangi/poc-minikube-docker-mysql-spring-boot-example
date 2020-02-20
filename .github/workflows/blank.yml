@@ -1,0 +1,24 @@
+name: "Test application on minikube"
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Setup Minikube
+      id: minikube
+      uses: CodingNagger/minikube-setup-action@v1.0.2
+
+    - name: Launch Minikube
+      run: eval ${{ steps.minikube.outputs.launcher }}
+
+    - name: Install all dependencies
+      run: dependencies/install-all-dependencies.sh
+
+    - name: Deploy application
+      run: deployment/deploy.sh
+
+    - name: Test application
+      run: tests/run-all-tests.sh
